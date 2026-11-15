@@ -1,0 +1,28 @@
+% Shared typography and layout. Compile with LuaLaTeX.
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\usepackage[margin=20mm]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\definecolor{accent}{HTML}{243B53}
+\hypersetup{colorlinks=true,urlcolor=accent,linkcolor=accent}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,nosep,topsep=3pt}
+\raggedright
+
+\newcommand{\cvname}[1]{{\Huge\sffamily\bfseries #1}\par}
+\newcommand{\cvheadline}[1]{{\large\sffamily #1}\par}
+\newcommand{\cvsection}[1]{%
+  \par\addvspace{12pt}%
+  {\large\sffamily\bfseries\color{accent}#1}\par
+  \vspace{2pt}\hrule\vspace{5pt}%
+}
+\newcommand{\cventry}[4]{%
+  \textbf{#1}\hfill {\small #2}\par
+  \textit{#3}\hfill {\small #4}\par
+}

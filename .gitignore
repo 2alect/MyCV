@@ -1,0 +1,30 @@
+# Generated output (including the PDF).
+/build/
+
+# TeX auxiliary files from builds outside build/.
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.xdv
+*.bcf
+*.run.xml
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.dvi
+*.fmt
+/main.pdf
+
+# Local operating system files.
+.DS_Store
+Thumbs.db
+Desktop.ini
