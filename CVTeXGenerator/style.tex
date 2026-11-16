@@ -7,7 +7,7 @@
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{tikz}
-\usepackage{mdframed}
+\usepackage{needspace}
 \usepackage{hyperref}
 
 \definecolor{accent}{HTML}{243B53}
@@ -121,18 +121,8 @@
 % Spacing between institutions or employers, without a rule.
 \newcommand{\cvcompanyseparator}{\par\addvspace{9pt}}
 
-% A page-breakable company tree rooted one third across the company icon.
-\newmdenv[
-  leftline=false,rightline=false,topline=false,bottomline=false,
-  linecolor=accent!40,linewidth=0.5pt,
-  innerleftmargin=0pt,innerrightmargin=0pt,
-  innertopmargin=\baselineskip,innerbottommargin=0pt,
-  leftmargin=0pt,rightmargin=0pt,
-  skipabove=0pt,skipbelow=0pt,
-  splittopskip=4pt,splitbottomskip=0pt
-,font=\normalsize]{cvcompanytree}
-
-\AtBeginEnvironment{cvcompanytree}{\raggedright}
+% Plain page-breakable content: no frame and no opaque background.
+\newenvironment{cvcompanytree}{\par\addvspace{\baselineskip}\normalsize\raggedright}{\par}
 
 % The separator is visible only when adjacent technologies share a line.
 \newcommand{\cvtechsep}{\discretionary{}{}{\hbox{\enspace\textbullet\enspace}}}

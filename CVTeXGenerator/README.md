@@ -154,7 +154,7 @@ or watermark metadata is added. Empty or invalid configured secrets fail the bui
 LuaLaTeX computes SHA-256 over a versioned, length-delimited combination of the
 secret, the SHA-256 of the selected content file, and the SHA-256 of the selected
 profile photo (or an explicit missing-photo marker). A subtle 5 pt light-gray copy ID (15% black) is
-printed at the bottom right of every page. The 128-bit ID and full fingerprint are
+printed at the bottom center of every page (2.5 mm above the edge). The 128-bit ID and full fingerprint are
 also stored in custom PDF metadata. The plaintext secret is not stored in the PDF.
 The mark does not require a second TeX pass or shell escape.
 
@@ -193,3 +193,25 @@ All `.pdf.sha256` records and generated PDFs should remain outside Git.
 Run deterministic fingerprint checks with `texlua watermark/test.lua` after creating
 `build/`. The implementation uses LuaTeX's built-in SHA-256 and PDF reader; no Python
 packages or additional TeX packages are required.
+
+## Page decoration
+
+An optional illustration can be placed as a background at the bottom of every page. Set its path
+in the selected content file, so each company variant can choose its own image:
+
+```tex
+\renewcommand{\cvfooterimage}{private/footer.png}
+```
+
+Keep it next to `private/photo.jpg` and the `private/icons/` directory; it belongs in
+the future private repository. The public example has no decoration by default.
+Missing files are silently skipped. Images fit within 85% of the text width and 32 mm height,
+with preserved aspect ratio, with its bottom edge 5.5 mm above the page edge. The image is rendered automatically
+in monochrome with a maximum ink density of
+`black!10`, lighter than the watermark (`black!15`). The source image is not modified. A white-backed
+PDF luminosity mask preserves tonal details and handles transparent PNGs. The mask
+is inverted into gray ink opacity, so no white rectangle or border is painted.
+Responsibility blocks have no opaque background, allowing the decoration to show
+through behind text. A wide image
+with a transparent background works best. The copy watermark remains below it.
+The illustration is in the background, so body text renders above it. The copy ID is centered below the illustration at 2.5 mm above the bottom edge. Neither element reserves text space; printers with large unprintable margins may clip them.

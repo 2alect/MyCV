@@ -5,8 +5,8 @@
 \AddToHook{shipout/foreground}{%
   \directlua{cvwatermark.initialize()}%
   \ifx\cvwatermarkid\empty\else
-    \put(\dimexpr\paperwidth-20mm\relax,\dimexpr6mm-\paperheight\relax){%
-      \makebox[0pt][r]{\color{black!15}\fontsize{5}{6}\selectfont\ttfamily\cvwatermarkid}%
+    \put(\dimexpr0.5\paperwidth\relax,\dimexpr2.5mm-\paperheight\relax){%
+      \makebox[0pt][c]{\color{black!15}\fontsize{5}{6}\selectfont\ttfamily\cvwatermarkid}%
     }%
   \fi
 }
