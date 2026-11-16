@@ -1,0 +1,16 @@
+% !TeX program = lualatex
+\documentclass[11pt,a4paper]{article}
+
+\input{style}
+\input{variant}
+% Local overrides are never tracked, including in a private fork.
+\InputIfFileExists{local/config.tex}{}{}
+
+\begin{document}
+\IfFileExists{\cvcontentfile}{%
+  \input{\cvcontentfile}%
+}{%
+  \PackageError{cv}{Missing content file: \cvcontentfile}%
+    {Check variant.tex or the optional local/config.tex override.}%
+}
+\end{document}

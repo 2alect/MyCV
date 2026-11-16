@@ -1,0 +1,64 @@
+\input{content/contacts.example}
+% Example photo path intentionally avoids local personal assets.
+\renewcommand{\cvphotofile}{content/example-photo.jpg}
+% Example content only. Keep real personal content in a private fork.
+\renewcommand{\cvapplicationnote}{%
+  Applying for the [role] position at [company]. Interested in [engineering challenge]
+  and the opportunity to contribute experience in [relevant expertise].
+}
+\begin{cvheader}
+\cvname{Your Name}
+\cvheadline{Professional Title}
+\vfill
+\cvphonecontact
+\cvemailcontact
+\href{https://www.linkedin.com/in/your-profile}{linkedin.com/in/your-profile}\par
+\end{cvheader}
+
+\cvsection{Residence \& Citizenship}
+Citizenship: [country]\par
+Based in [city, country], since [year]\par
+Residence status: [status]
+
+\cvsection{Languages}
+\textbf{Language A:} [proficiency]\par
+\textbf{Language B:} [proficiency]
+
+\cvsection{Skills}
+\begin{itemize}
+  \item {[Core engineering skill]}
+  \item {[Design and architecture skill]}
+  \item {[Diagnostics and optimization skill]}
+\end{itemize}
+
+\cvsection{Experience}
+\cvcompany{Example Company}{City, Country}{%
+  \cvcareerrole{Current Role}{Full-time}{Jan 2023 -- Present}
+  \cvcareerrole{Previous Role}{Part-time}{Jan 2021 -- Dec 2022}
+}{private/icons/example-company.png}
+\begin{cvcompanytree}\raggedright
+\begin{itemize}
+  \item Describe responsibilities across your time at this company.
+  \item Describe a verified achievement, your contribution, and its outcome.
+\end{itemize}
+\cvdevelopmentstack{\mbox{Technology A}\cvtechsep{}\mbox{Technology B}\cvtechsep{}\mbox{Technology C}}
+\end{cvcompanytree}
+
+\cvsection{Education}
+\cveducation{Example University}
+  {Subject (degree program)\\Faculty or department\\City, Country}
+  {Sep 2016 -- Jun 2020}{Degree awarded}{private/icons/example-university.png}
+\cvinstitutiondetail{\textbf{Thesis:} [Research topic and contribution].}
+
+\cvsection{Activities and Achievements}
+\begin{itemize}
+  \item {[Competition result, year, and team]}.
+  \item {[Relevant training, provider, dates, and location]}.
+  \item Project: \href{https://github.com/example/project}{\nolinkurl{github.com/example/project}}.
+\end{itemize}
+
+\cvsection{Other hobbies}
+\begin{itemize}
+  \item {[Interest A]}.
+  \item {[Interest B]}.
+\end{itemize}

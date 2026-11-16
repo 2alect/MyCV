@@ -1,0 +1,145 @@
+# CV template
+
+LuaLaTeX CV template with example content, intended for a public repository.
+All project text is in English. Unless explicitly stated otherwise, paths below are
+relative to `CVTeXGenerator/`.
+
+## Requirements
+
+- A TeX distribution with `lualatex` available on PATH (for example, MiKTeX).
+- VS Code with LaTeX Workshop for editor builds; command-line builds work without VS Code.
+- Install missing TeX packages if prompted on the first build.
+
+## Three layers
+
+| Layer | Files | Public repository | Future private fork |
+| --- | --- | --- | --- |
+| Template and examples | `main.tex`, `style.tex`, `variant.tex`, `content/`, `.vscode/` | Tracked | Tracked |
+| Personal content and assets | `private/` | Ignored | Tracked after updating the fork's ignore rules |
+| Sensitive contacts and local overrides | `local/` | Always ignored | Always ignored |
+
+Generated files under `build/` are always ignored. PDFs can contain sensitive contacts.
+
+## Build the public example
+
+A fresh clone builds the example without any personal files. `variant.tex` selects
+`content/profile.example.tex`; `content/contacts.example.tex` provides dummy contacts.
+The example covers the header, application note, residence, languages, skills,
+company career tracks, responsibilities, development stacks, education, activities,
+and hobbies. Missing photo and logo files are supported.
+
+In VS Code, open the root `MyCV.code-workspace` file or this subproject folder, then open `main.tex` and use **LaTeX Workshop: Build LaTeX project**
+(`Ctrl+Alt+B`). Saving also triggers a build. Use **LaTeX Workshop: View LaTeX PDF file**
+to view the PDF.
+
+From PowerShell in the `CVTeXGenerator` directory (run `cd CVTeXGenerator` from the repository root first):
+
+```powershell
+New-Item -ItemType Directory -Force build | Out-Null
+lualatex -interaction=nonstopmode -halt-on-error -file-line-error -synctex=1 -output-directory=build main.tex
+lualatex -interaction=nonstopmode -halt-on-error -file-line-error -synctex=1 -output-directory=build main.tex
+```
+
+On Linux, use Bash from the same directory:
+
+```bash
+mkdir -p build
+lualatex -interaction=nonstopmode -halt-on-error -file-line-error -synctex=1 -output-directory=build main.tex
+lualatex -interaction=nonstopmode -halt-on-error -file-line-error -synctex=1 -output-directory=build main.tex
+```
+
+The second pass updates cross-references if they are added later; the current CV needs only one pass.
+Output: `build/main.pdf`. The recipe requires no latexmk or Perl.
+
+## Local personal preview in the public checkout
+
+Keep personal content and images under `private/`. For a new setup, copy
+`content/profile.example.tex` to `private/general.tex` and replace its placeholders.
+Do not overwrite an existing personal file. Then create an
+ignored `local/config.tex`:
+
+```tex
+\renewcommand{\cvcontentfile}{private/general.tex}
+```
+
+The tracked `variant.tex` continues to select the public example. The local override
+changes only what is built on your computer. Neither local data directory is part
+of the public repository. Keep separate backups until the private fork is ready.
+
+## Sensitive contacts
+
+Put actual email and telephone values only in ignored `local/contacts.tex`:
+
+```tex
+\renewcommand{\cvphone}{+00 123 456 789}
+\renewcommand{\cvphonelink}{+00123456789}
+\renewcommand{\cvemail}{person@example.com}
+```
+
+Each content variant owns its contact policy. The public example loads only
+`content/contacts.example.tex`, even if real local contacts exist.
+Personal variants load the example defaults and then optionally override them:
+
+```tex
+\input{content/contacts.example}
+\InputIfFileExists{local/contacts.tex}{}{}
+```
+
+`main.tex` selects content but does not load contacts. To preview a fully anonymous
+example, comment out the selection in `local/config.tex` and rebuild; no need to
+rename the contact file.
+
+Content files use `\cvphonecontact` and `\cvemailcontact`, rather than literal
+contact details. Without the local file, safe example values are used.
+Escape TeX special characters in text values when necessary.
+
+## Future private fork
+
+Once a private repository is created:
+
+1. Copy the locally preserved `private/` directory into that checkout.
+2. Remove `/private/` from `CVTeXGenerator/.gitignore` and `**/private/` from the root `.gitignore` in that fork, leaving all local and build ignore rules intact.
+3. Set its tracked `variant.tex` to select `private/general.tex` or another private variant.
+4. Commit the personal content and assets in the private fork.
+5. Restore `local/contacts.tex` separately on each computer. Do not commit it.
+
+A fork must permit private visibility; otherwise use a separate private repository
+based on the same template. This project does not create a remote or change repository visibility.
+For company-specific branches, change the tracked selector and the private content
+in that fork. An ignored `local/config.tex`, if present, overrides the selector;
+remove that override when relying on branch-specific selectors.
+
+## Images
+
+The personal photo defaults to `private/photo.jpg` (35 x 40 mm maximum, aspect ratio preserved).
+The example overrides that path to `content/example-photo.jpg` so it never loads a personal photo.
+When creating personal content from the example, replace that override with:
+
+```tex
+\renewcommand{\cvphotofile}{private/photo.jpg}
+```
+
+The header places name and contacts on the left, the photo in the center, and an application
+note on the right. Set the note in the selected content with `\renewcommand{\cvapplicationnote}{...}`.
+Company and institution icons use local paths passed to their heading commands.
+Icons fit within 49 x 49 CSS pixels at 96 dpi (about 13 x 13 mm), with rounded corners.
+Missing icons display a rounded outline labeled `Icon`; a missing photo displays a placeholder.
+Personal images belong only in the private fork.
+
+## Template files
+
+- `main.tex` loads styles, the content selector, and an optional local selector override.
+- `style.tex` defines typography, the header, company career tracks, education, and image placeholders.
+- `variant.tex` chooses the content file. A missing selected file is a build error.
+- `content/profile.example.tex` demonstrates every section without personal data.
+- `content/contacts.example.tex` defines safe contacts and contact-rendering commands.
+- `.vscode/settings.json` configures two LuaLaTeX passes, build on save, and the PDF viewer.
+
+After changing variants, rebuild: `build/main.pdf` is shared by variants and may still show
+the previous content until compilation succeeds.
+
+## Before committing
+
+Review staged files. `private/` must stay ignored in the public checkout; `local/`
+must stay ignored in both repositories. Never force-add sensitive files. Git does
+not back up ignored files, and `git clean -fdx` can delete them.

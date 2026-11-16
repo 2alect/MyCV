@@ -1,30 +1,18 @@
-﻿# CV
+# MyCV
 
-A general CV prototype without company-specific tailoring. Built with **LuaLaTeX** (MiKTeX).
-All content is in English and currently contains placeholders to replace with verified information.
+Repository for a CV template and related tools. Each tool lives in its own subdirectory.
 
-## Files
+## Subprojects
 
-- `main.tex` - entry point.
-- `content/profile.tex` - CV content.
-- `style.tex` - fonts, colors, spacing, and formatting commands.
-- `.vscode/settings.json` - LaTeX Workshop recipe without a latexmk/Perl dependency.
-- `build/` - generated PDF and auxiliary files; excluded from Git.
+- [CVTeXGenerator](CVTeXGenerator/README.md) - LuaLaTeX CV template, example content, and local personal preview.
 
-## Build in VS Code
+For CV editing, open the `CVTeXGenerator` folder directly in VS Code.
+The optional `MyCV.code-workspace` file opens that same folder and loads its editor settings;
+it is a convenience, not a build dependency. It currently includes only the generator.
 
-Open `main.tex` and run **LaTeX Workshop: Build LaTeX project**
-(`Ctrl+Alt+B`). Saving also triggers a build.
-Run **LaTeX Workshop: View LaTeX PDF file** to view the result.
+See the subproject README for setup, builds, content selection, and contact handling.
+Paths in that README are relative to `CVTeXGenerator/`, unless stated otherwise.
 
-## Build from PowerShell
-
-Run from the repository root:
-
-```powershell
-New-Item -ItemType Directory -Force build | Out-Null
-lualatex -interaction=nonstopmode -halt-on-error -file-line-error -synctex=1 -output-directory=build main.tex
-lualatex -interaction=nonstopmode -halt-on-error -file-line-error -synctex=1 -output-directory=build main.tex
-```
-
-Output: `build/main.pdf`. Two passes update cross-references.
+This public repository stores the template and examples. Personal content and images
+under `CVTeXGenerator/private/` remain local until moved into a private repository.
+Sensitive contacts under `CVTeXGenerator/local/` must stay outside Git in both repositories.

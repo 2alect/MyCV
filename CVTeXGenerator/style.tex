@@ -1,0 +1,179 @@
+% Shared typography and layout. Compile with LuaLaTeX.
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\usepackage[margin=20mm]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage{hyperref}
+
+\definecolor{accent}{HTML}{243B53}
+\hypersetup{colorlinks=true,urlcolor=accent,linkcolor=accent}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlist[itemize]{leftmargin=*,nosep,topsep=3pt}
+\raggedright
+
+\newcommand{\cvname}[1]{{\fontsize{20}{24}\selectfont\sffamily\bfseries #1}\par}
+\newcommand{\cvheadline}[1]{{\large\sffamily #1}\par}
+\newcommand{\cvsection}[1]{%
+  \par\Needspace{3\baselineskip}\addvspace{9pt}%
+  \noindent{\large\sffamily\bfseries\color{accent}%
+    \leaders\hrule height 0.4pt\hfill
+    \hspace{3mm}#1\hspace{3mm}%
+    \leaders\hrule height 0.4pt\hfill\kern0pt}\par
+  \nopagebreak[4]\vspace{3pt}%
+}
+\newcommand{\cventry}[4]{%
+  \textbf{#1}\hspace{2mm}\hfill {\small #2}\par
+  \textit{#3}\hfill {\small #4}\par
+}
+
+% Shared local photo; keep personal images under the ignored private/ folder.
+\newcommand{\cvphotofile}{private/photo.jpg}
+\newcommand{\cvphoto}{%
+  \IfFileExists{\cvphotofile}{%
+    \includegraphics[width=35mm,height=40mm,keepaspectratio]{\cvphotofile}%
+  }{%
+    \begingroup
+    \setlength{\fboxsep}{0pt}%
+    \color{accent!35}%
+    \fbox{\parbox[c][40mm][c]{35mm}{\centering
+      \sffamily\small Photo\par\footnotesize\texttt{private/photo.jpg}}}%
+    \endgroup
+  }%
+}
+% Set this in local content; keep company-specific wording out of the template.
+\newcommand{\cvapplicationnote}{}
+\newenvironment{cvheader}{%
+  \noindent\begin{minipage}[b][40mm][s]{0.38\textwidth}\raggedright\vspace{0pt}%
+}{%
+  \end{minipage}%
+  \begin{minipage}[b][40mm][c]{0.24\textwidth}\centering
+    \cvphoto
+  \end{minipage}%
+  \begin{minipage}[b][40mm][c]{0.38\textwidth}\raggedright\footnotesize
+    \cvapplicationnote\par
+  \end{minipage}\par
+}
+% Optional local company icons to the left of company name and location.
+% 49 CSS pixels at 96 dpi, expressed as a physical size for PDF output.
+\newlength{\cvcompanyiconsize}
+\setlength{\cvcompanyiconsize}{0.5104167in}
+% Each company and role row uses two equal halves of its container.
+\newcommand{\cvcompanyicon}[1]{%
+  \IfFileExists{#1}{%
+    \begin{tikzpicture}
+      \path[use as bounding box] (0,0) rectangle (\cvcompanyiconsize,\cvcompanyiconsize);
+      \clip[rounded corners=1.5mm] (0.25pt,0.25pt) rectangle
+        (\dimexpr\cvcompanyiconsize-0.25pt\relax,\dimexpr\cvcompanyiconsize-0.25pt\relax);
+      \node[inner sep=0pt] at (0.5\cvcompanyiconsize,0.5\cvcompanyiconsize) {%
+        \includegraphics[width=\cvcompanyiconsize,height=\cvcompanyiconsize,keepaspectratio]{#1}%
+      };
+    \end{tikzpicture}%
+  }{%
+    \begin{tikzpicture}
+      \path[use as bounding box] (0,0) rectangle (\cvcompanyiconsize,\cvcompanyiconsize);
+      \draw[accent!35,line width=0.4pt,rounded corners=1.5mm]
+        (0.2pt,0.2pt) rectangle
+        (\dimexpr\cvcompanyiconsize-0.2pt\relax,\dimexpr\cvcompanyiconsize-0.2pt\relax);
+      \node[text=accent!50,font=\sffamily\scriptsize,inner sep=0pt]
+        at (0.5\cvcompanyiconsize,0.5\cvcompanyiconsize) {Icon};
+    \end{tikzpicture}%
+  }%
+}
+\newcommand{\cvcompanyidentity}[3]{%
+  \begin{minipage}[c]{\cvcompanyiconsize}\cvcompanyicon{#3}\end{minipage}%
+  \hspace{3mm}%
+  \begin{minipage}[c]{\dimexpr\linewidth-\cvcompanyiconsize-3mm\relax}\raggedright
+    {\sffamily\bfseries\color{accent}#1}\par
+    #2\par
+  \end{minipage}%
+}
+\newcommand{\cvcompany}[4]{%
+  \par\addvspace{7pt}%
+  \noindent\if\relax\detokenize{#3}\relax
+    \cvcompanyidentity{#1}{#2}{#4}%
+  \else
+    \begin{minipage}[c]{0.4\linewidth}%
+      \cvcompanyidentity{#1}{#2}{#4}%
+    \end{minipage}%
+    \begin{minipage}[c]{0.6\linewidth}\centering\small\sffamily\color{accent}
+      #3\par
+    \end{minipage}%
+  \fi\par\nopagebreak[4]%
+}
+\newlength{\cvperiodwidth}
+\newlength{\cvcontractwidth}
+\newcommand{\cvrole}[3]{%
+  \par\addvspace{3pt}%
+  \noindent\begin{minipage}[c]{0.5\linewidth}\raggedright
+    \textbf{#1}\par
+  \end{minipage}%
+  \begin{minipage}[c]{0.5\linewidth}\raggedleft\small
+    \mbox{#3 \textit{(#2)}}\par
+  \end{minipage}\par\nopagebreak[4]%
+}
+% Spacing between institutions or employers, without a rule.
+\newcommand{\cvcompanyseparator}{\par\addvspace{9pt}}
+
+% A page-breakable company tree rooted one third across the company icon.
+\newmdenv[
+  leftline=false,rightline=false,topline=false,bottomline=false,
+  linecolor=accent!40,linewidth=0.5pt,
+  innerleftmargin=0pt,innerrightmargin=0pt,
+  innertopmargin=\baselineskip,innerbottommargin=0pt,
+  leftmargin=0pt,rightmargin=0pt,
+  skipabove=0pt,skipbelow=0pt,
+  splittopskip=4pt,splitbottomskip=0pt
+,font=\normalsize]{cvcompanytree}
+
+\AtBeginEnvironment{cvcompanytree}{\raggedright}
+
+% The separator is visible only when adjacent technologies share a line.
+\newcommand{\cvtechsep}{\discretionary{}{}{\hbox{\enspace\textbullet\enspace}}}
+
+% Institution details and a compact right-aligned period/status column.
+\newcommand{\cveducation}[5]{%
+  \par\addvspace{7pt}%
+  \settowidth{\cvperiodwidth}{{\small #3}}%
+  \settowidth{\cvcontractwidth}{{\small\textit{(#4)}}}%
+  \ifdim\cvcontractwidth>\cvperiodwidth
+    \setlength{\cvperiodwidth}{\cvcontractwidth}%
+  \fi
+  \noindent\begin{minipage}[c]{\dimexpr\linewidth-\cvperiodwidth-3mm\relax}%
+    \cvcompanyidentity{#1}{#2}{#5}%
+  \end{minipage}\hfill
+  \begin{minipage}[c]{\cvperiodwidth}\centering\small
+    \mbox{#3}\par
+    \if\relax\detokenize{#4}\relax\else\textit{(#4)}\par\fi
+  \end{minipage}\par
+}
+
+% Full-width detail aligned with institution text rather than its icon.
+\newcommand{\cvinstitutiondetail}[1]{%
+  \par\noindent\hspace*{\dimexpr\cvcompanyiconsize+3mm\relax}%
+  \begin{minipage}{\dimexpr\linewidth-\cvcompanyiconsize-3mm\relax}\raggedright
+    #1\par
+  \end{minipage}\par
+}
+
+% Compact career rows for the right half of a company header.
+\newcommand{\cvcareerrole}[3]{%
+  {\normalfont\small\noindent
+    \begin{minipage}[t]{0.46\linewidth}\raggedright\textbf{#1}\end{minipage}%
+    \hspace{1mm}%
+    \begin{minipage}[t]{\dimexpr0.54\linewidth-1mm\relax}\raggedright
+      \mbox{#3} \textit{(#2)}%
+    \end{minipage}\par}%
+}
+\newcommand{\cvdevelopmentstack}[1]{%
+  \par\addvspace{4pt}\noindent
+  \begin{minipage}{\linewidth}\small\sffamily\raggedright
+    \textbf{Development stack:}\nobreak\hspace{0.5em}#1\par
+  \end{minipage}\par
+}
