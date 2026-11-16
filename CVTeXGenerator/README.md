@@ -218,3 +218,19 @@ Responsibility blocks have no opaque background, allowing the decoration to show
 through behind text. A wide image
 with a transparent background works best. The copy watermark remains below it.
 The illustration is in the background, so body text renders above it. The copy ID is centered below the illustration at 2.5 mm above the bottom edge. Neither element reserves text space; printers with large unprintable margins may clip them.
+
+## Continued employers and institutions
+
+Wrap the complete employer or institution (header, description, stack or thesis)
+in `cvcontinued`. Its name is repeated with `--- continued` only after a page break.
+The block has no border or opaque background. It uses tcolorbox's skins and breakable
+libraries; MiKTeX may install the corresponding packages on the first build.
+
+```tex
+\begin{cvcontinued}{Example Company}
+% Company header and all associated content.
+\end{cvcontinued}
+```
+
+Natural page breaks are automatic. Inside this block, use `\cvcontinuationbreak`
+instead of `\newpage` when a specific page break is required. Do not nest these blocks.

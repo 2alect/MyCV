@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{needspace}
+\usepackage[skins,breakable]{tcolorbox}
 \usepackage{hyperref}
 
 \definecolor{accent}{HTML}{243B53}
@@ -122,6 +123,16 @@
 \newcommand{\cvcompanyseparator}{\par\addvspace{9pt}}
 
 % Plain page-breakable content: no frame and no opaque background.
+% Wrap an entire employer or institution, including its details, in this block.
+\newenvironment{cvcontinued}[1]{%
+  \begin{tcolorbox}[blanker,breakable,parbox=false,
+    before skip=0pt,after skip=0pt,
+    title after break={#1 --- continued},
+    fonttitle=\normalsize\sffamily\bfseries,coltitle=accent,
+    bottomtitle=6pt]%
+}{\end{tcolorbox}}
+\newcommand{\cvcontinuationbreak}{\tcbbreak}
+
 \newenvironment{cvcompanytree}{\par\addvspace{\baselineskip}\normalsize\raggedright}{\par}
 
 % The separator is visible only when adjacent technologies share a line.
