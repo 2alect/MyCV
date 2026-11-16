@@ -11,9 +11,11 @@
   \includegraphics[width=0.75\textwidth,height=32mm,keepaspectratio]{\cvfooterprepared}%
 }
 \AddToHook{shipout/background}{%
+  \ifx\cvfooterimage\empty\else
   \IfFileExists{\cvfooterimage}{%
     \put(\dimexpr0.5\paperwidth\relax,\dimexpr5.5mm-\paperheight\relax){%
       \makebox[0pt][c]{\raisebox{0pt}[0pt][0pt]{\cvrenderfooter}}%
     }%
   }{}%
+  \fi
 }
