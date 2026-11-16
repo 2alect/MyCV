@@ -14,7 +14,7 @@
 \newsavebox{\cvfooterbox}
 \newcommand{\cvrenderfooter}{%
   \begingroup\cvinvertfootermask
-  \sbox{\cvfooterbox}{\includegraphics[width=0.85\textwidth,height=32mm,keepaspectratio]{\cvfooterimage}}%
+  \sbox{\cvfooterbox}{\includegraphics[width=0.75\textwidth,height=32mm,keepaspectratio]{\cvfooterimage}}%
   % A white backdrop handles transparent PNGs. PDF luminosity becomes a soft mask.
   \begin{tikzfadingfrompicture}[name=cvfooterluminance]
     \node[inner sep=0pt,outer sep=0pt,fill=white] {\usebox{\cvfooterbox}};

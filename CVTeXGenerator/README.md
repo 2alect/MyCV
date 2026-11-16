@@ -205,7 +205,7 @@ in the selected content file, so each company variant can choose its own image:
 
 Keep it next to `private/photo.jpg` and the `private/icons/` directory; it belongs in
 the future private repository. The public example has no decoration by default.
-Missing files are silently skipped. Images fit within 85% of the text width and 32 mm height,
+Missing files are silently skipped. Images fit within 75% of the text width and 32 mm height,
 with preserved aspect ratio, with its bottom edge 5.5 mm above the page edge. The image is rendered automatically
 in monochrome with a maximum ink density of
 `black!10`, lighter than the watermark (`black!15`). The source image is not modified. A white-backed
