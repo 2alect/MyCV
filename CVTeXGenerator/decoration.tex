@@ -1,29 +1,14 @@
-% Optional monochrome background decoration on every page; source pixels remain unchanged.
-\usetikzlibrary{fadings}
-\usepackage{etoolbox}
-% Invert luminosity into ink opacity, rather than drawing an opaque white rectangle.
-\makeatletter
-\newcommand{\cvinvertfootermask}{%
-  \patchcmd{\pgf@sys@pdf@install@mask}{/S /Luminosity}{%
-    /S /Luminosity /BC [1]
-    /TR << /FunctionType 2 /Domain [0 1] /C0 [1] /C1 [0] /N 1 >>
-  }{}{\PackageError{cv}{Unsupported PGF soft-mask backend}{Use LuaLaTeX with the supported PGF PDF backend.}}%
-}
-\makeatother
+﻿% PNG conversion preserves alpha; PDF uses only a standard grayscale image and alpha mask.
 \providecommand{\cvfooterimage}{}
-\newsavebox{\cvfooterbox}
+\newcommand{\cvfooterprepared}{}
+\directlua{cvfooter = dofile('footer-image.lua')}
 \newcommand{\cvrenderfooter}{%
-  \begingroup\cvinvertfootermask
-  \sbox{\cvfooterbox}{\includegraphics[width=0.75\textwidth,height=32mm,keepaspectratio]{\cvfooterimage}}%
-  % A white backdrop handles transparent PNGs. PDF luminosity becomes a soft mask.
-  \begin{tikzfadingfrompicture}[name=cvfooterluminance]
-    \node[inner sep=0pt,outer sep=0pt,fill=white] {\usebox{\cvfooterbox}};
-  \end{tikzfadingfrompicture}%
-  \begin{tikzpicture}
-    \fill[black!10,path fading=cvfooterluminance,fit fading=false]
-      (-0.5\wd\cvfooterbox,-0.5\ht\cvfooterbox) rectangle (0.5\wd\cvfooterbox,0.5\ht\cvfooterbox);
-  \end{tikzpicture}%
-  \endgroup
+  \directlua{
+    local ok, result = pcall(cvfooter.prepare, token.get_macro('cvfooterimage'))
+    if ok then token.set_macro('cvfooterprepared', result, 'global')
+    else tex.error('Cannot prepare footer PNG', {tostring(result)}) end
+  }%
+  \includegraphics[width=0.75\textwidth,height=32mm,keepaspectratio]{\cvfooterprepared}%
 }
 \AddToHook{shipout/background}{%
   \IfFileExists{\cvfooterimage}{%

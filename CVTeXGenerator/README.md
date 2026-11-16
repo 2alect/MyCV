@@ -208,9 +208,12 @@ the future private repository. The public example has no decoration by default.
 Missing files are silently skipped. Images fit within 75% of the text width and 32 mm height,
 with preserved aspect ratio, with its bottom edge 5.5 mm above the page edge. The image is rendered automatically
 in monochrome with a maximum ink density of
-`black!10`, lighter than the watermark (`black!15`). The source image is not modified. A white-backed
-PDF luminosity mask preserves tonal details and handles transparent PNGs. The mask
-is inverted into gray ink opacity, so no white rectangle or border is painted.
+`black!10`, lighter than the watermark (`black!15`). The source image is not modified.
+`footer-image.lua` prepares a grayscale PNG while preserving its original alpha channel.
+The PDF embeds this image with standard transparency, without custom luminosity masks
+or transfer functions. Generated images are cached under ignored `build/`; no shell
+escape, Python packages, or extra executables are required. Use an 8-bit, non-interlaced
+PNG (export as RGBA PNG if conversion reports an unsupported format).
 Responsibility blocks have no opaque background, allowing the decoration to show
 through behind text. A wide image
 with a transparent background works best. The copy watermark remains below it.
