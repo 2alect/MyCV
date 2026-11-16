@@ -6,6 +6,8 @@
 % Local overrides are never tracked, including in a private fork.
 \InputIfFileExists{local/config.tex}{}{}
 
+\input{watermark/mark}
+
 \begin{document}
 \IfFileExists{\cvcontentfile}{%
   \input{\cvcontentfile}%

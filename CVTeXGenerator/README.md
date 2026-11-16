@@ -143,3 +143,53 @@ the previous content until compilation succeeds.
 Review staged files. `private/` must stay ignored in the public checkout; `local/`
 must stay ignored in both repositories. Never force-add sensitive files. Git does
 not back up ignored files, and `git clean -fdx` can delete them.
+
+## Optional copy watermark
+
+Create `local/watermark.txt` as a single UTF-8 line of 1 to 128 characters.
+Use `content/watermark.example.txt` as an example. Include the recipient, issue date,
+and preferably a random nonce. This file stays outside Git. Without it, no watermark
+or watermark metadata is added. Empty or invalid configured secrets fail the build.
+
+LuaLaTeX computes SHA-256 over a versioned, length-delimited combination of the
+secret, the SHA-256 of the selected content file, and the SHA-256 of the selected
+profile photo (or an explicit missing-photo marker). A subtle 5 pt light-gray copy ID (15% black) is
+printed at the bottom right of every page. The 128-bit ID and full fingerprint are
+also stored in custom PDF metadata. The plaintext secret is not stored in the PDF.
+The mark does not require a second TeX pass or shell escape.
+
+Changing the secret, content bytes, or photo bytes changes the mark on rebuild.
+Other included files, contact overrides, logos, and style files are not part of this
+source fingerprint. A simple hash is not encryption: predictable recipient/date
+strings can be guessed; use a nonce if the mapping should be harder to guess.
+
+From `CVTeXGenerator/`, inspect a PDF and optionally check it against source inputs:
+
+```text
+texlua watermark/verify.lua build/main.pdf
+texlua watermark/verify.lua build/main.pdf local/watermark.txt private/general.tex private/photo.jpg
+```
+
+For integrity of an issued PDF, retain the exact original PDF and create its record
+only after the final build:
+
+```text
+texlua watermark/verify.lua --record build/main.pdf
+texlua watermark/verify.lua build/main.pdf
+```
+
+This writes `build/main.pdf.sha256`. Keep this trusted record privately; when checking
+another copy, place the original record next to it with the matching `.pdf.sha256`
+name. The verifier refuses to overwrite existing records. A modified PDF produces
+exit code 1; invalid input produces 2. Without a trusted record it reports integrity
+as unknown, even if the copy ID remains readable.
+
+An embedded source fingerprint cannot authenticate arbitrary edits to a finished PDF:
+replacing an image can leave both the visible ID and metadata untouched. The external
+whole-file hash detects those changes. Neither mechanism is a digital signature or
+proof of who redistributed a copy. Marks may be removed, cropped, or lost in conversion.
+All `.pdf.sha256` records and generated PDFs should remain outside Git.
+
+Run deterministic fingerprint checks with `texlua watermark/test.lua` after creating
+`build/`. The implementation uses LuaTeX's built-in SHA-256 and PDF reader; no Python
+packages or additional TeX packages are required.

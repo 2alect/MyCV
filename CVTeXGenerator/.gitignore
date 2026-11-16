@@ -36,3 +36,9 @@
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Private integrity records for issued PDFs.
+*.pdf.sha256
+
+# Local command notes.
+/notes/
